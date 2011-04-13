@@ -114,7 +114,10 @@ function illustrator_meta() {
   $illu_email = $custom["illu_email"][0];
   $illu_sites = $custom["illu_sites"][0];
   $illu_phone = $custom["illu_phone"][0];
+  $illu_title = $custom["illu_title"][0];
   ?>
+	<p><label>Thesis Title:</label><br />
+  <textarea name="illu_title"><?php echo $illu_title; ?></textarea></p>
   <p><label>Email Address:</label><br />
   <textarea name="illu_email"><?php echo $illu_email; ?></textarea></p>
   <p><label>Website:</label><br />
@@ -136,4 +139,6 @@ function save_details(){
   update_post_meta($post->ID, "illu_email", $_POST["illu_email"]);
   update_post_meta($post->ID, "illu_sites", $_POST["illu_sites"]);
   update_post_meta($post->ID, "illu_phone", $_POST["illu_phone"]);
+  update_post_meta($post->ID, "illu_title", $_POST["illu_title"]);
+
 }

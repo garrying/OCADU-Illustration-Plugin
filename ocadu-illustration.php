@@ -32,7 +32,7 @@ function create_my_post_types() {
 			'has_archive' => true,
 			'menu_position' => 0,
 			'supports' => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
-			'rewrite' => array( 'slug' => 'illustators', 'with_front' => false ),
+			'rewrite' => array( 'slug' => 'illustrators', 'with_front' => false ),
 		)
 	);
 	

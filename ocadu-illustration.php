@@ -113,6 +113,7 @@ function illustrator_meta() {
   $custom = get_post_custom($post->ID);
   $illu_email = $custom["illu_email"][0];
   $illu_sites = $custom["illu_sites"][0];
+  $illu_sites_2 = $custom["illu_sites_2"][0];
   $illu_phone = $custom["illu_phone"][0];
   $illu_title = $custom["illu_title"][0];
   ?>
@@ -122,6 +123,9 @@ function illustrator_meta() {
   <textarea name="illu_email"><?php echo $illu_email; ?></textarea></p>
   <p><label>Website:</label><br />
   <textarea name="illu_sites"><?php echo $illu_sites; ?></textarea><br />
+<small>Include http://</small></p>
+  <p><label>Website:</label><br />
+  <textarea name="illu_sites_2"><?php echo $illu_sites_2; ?></textarea><br />
 <small>Include http://</small></p>
   <p><label>Telephone:</label><br />
   <textarea name="illu_phone"><?php echo $illu_phone; ?></textarea><br />
@@ -138,6 +142,7 @@ function save_details(){
 	}
   update_post_meta($post->ID, "illu_email", $_POST["illu_email"]);
   update_post_meta($post->ID, "illu_sites", $_POST["illu_sites"]);
+  update_post_meta($post->ID, "illu_sites_2", $_POST["illu_sites_2"]);
   update_post_meta($post->ID, "illu_phone", $_POST["illu_phone"]);
   update_post_meta($post->ID, "illu_title", $_POST["illu_title"]);
 

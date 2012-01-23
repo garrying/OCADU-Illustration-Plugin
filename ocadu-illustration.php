@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: OCADU Illustration
+Plugin Name: OCAD U Illustration
 Plugin URI: http://www.ocaduillustration.com
 Description: Brings support to WP3 for things like Event and Illustrator post types.
 Author: Garry Ing

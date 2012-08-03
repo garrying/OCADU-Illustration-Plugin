@@ -31,7 +31,7 @@ function create_my_post_types() {
 			'public' => true,
 			'has_archive' => true,
 			'menu_position' => 0,
-			'menu_icon' => plugin_dir_url() . '/ocaduillustration/illustrator-posttype.png',
+			'menu_icon' => plugin_dir_url() . '/ocadu-illustration/illustrator-posttype.png',
 			'supports' => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
 			'rewrite' => array( 'slug' => 'illustrators', 'with_front' => false ),
 		)
@@ -57,7 +57,7 @@ function create_my_post_types() {
 			'public' => true,
 			'has_archive' => true,
 			'menu_position' => 1,
-			'menu_icon' => plugin_dir_url() . '/ocaduillustration/events-posttype.png',
+			'menu_icon' => plugin_dir_url() . '/ocadu-illustration/events-posttype.png',
 			'supports' => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
 			'rewrite' => array( 'slug' => 'events', 'with_front' => false ),
 		)

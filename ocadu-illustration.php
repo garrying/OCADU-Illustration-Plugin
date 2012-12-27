@@ -31,7 +31,7 @@ function create_my_post_types() {
 			'public' => true,
 			'has_archive' => true,
 			'menu_position' => 0,
-			'menu_icon' => plugin_dir_url() . '/ocadu-illustration/illustrator-posttype.png',
+			'menu_icon' => plugins_url( 'illustrator-posttype.png', __FILE__ ),
 			'supports' => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
 			'rewrite' => array( 'slug' => 'illustrators', 'with_front' => false ),
 		)
@@ -57,7 +57,7 @@ function create_my_post_types() {
 			'public' => true,
 			'has_archive' => true,
 			'menu_position' => 1,
-			'menu_icon' => plugin_dir_url() . '/ocadu-illustration/events-posttype.png',
+			'menu_icon' => plugins_url( 'events-posttype.png', __FILE__ ),
 			'supports' => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
 			'rewrite' => array( 'slug' => 'events', 'with_front' => false ),
 		)
@@ -111,41 +111,65 @@ function admin_init(){
 }
   
 function illustrator_meta() {
-  global $post;
-  $custom = get_post_custom($post->ID);
-  $illu_email = $custom["illu_email"][0];
-  $illu_sites = $custom["illu_sites"][0];
-  $illu_sites_2 = $custom["illu_sites_2"][0];
-  $illu_phone = $custom["illu_phone"][0];
-  $illu_title = $custom["illu_title"][0];
-  ?>
-	<p><label>Thesis Title:</label><br />
-  <textarea name="illu_title"><?php echo $illu_title; ?></textarea></p>
-  <p><label>Email Address:</label><br />
-  <textarea name="illu_email"><?php echo $illu_email; ?></textarea></p>
-  <p><label>Website:</label><br />
-  <textarea name="illu_sites"><?php echo $illu_sites; ?></textarea><br />
-<small>Include http://</small></p>
-  <p><label>Website:</label><br />
-  <textarea name="illu_sites_2"><?php echo $illu_sites_2; ?></textarea><br />
-<small>Include http://</small></p>
-  <p><label>Telephone:</label><br />
-  <textarea name="illu_phone"><?php echo $illu_phone; ?></textarea><br />
-<small>Example: (416) 123-4567</p>
-  <?php
+	global $post;
+	$custom = get_post_custom($post->ID);
+	if (empty($custom)) {
+		?>
+		<p><label for="illu_title">Thesis Title:</label><br />
+		<textarea id="illu_title" name="illu_title"></textarea></p>
+		<p><label for="illu_email">Email Address:</label><br />
+		<input type="email" id="illu_email" name="illu_email" value=""></p>
+		<p><label for="illu_sites">Website:</label><br />
+		<input type="url" id="illu_sites" name="illu_sites" value=""><br />
+		<small>Include http://</small></p>
+		<p><label for="illu_sites_2">Website:</label><br />
+		<input type="url" id="illu_sites_2" name="illu_sites_2" value=""><br />
+		<small>Include http://</small></p>
+		<p><label for="illu_phone">Telephone:</label><br />
+		<input type="tel" id="illu_phone" name="illu_phone" value=""><br />
+		<small>Example: (416) 123-4567</p>
+		<?php
+	} else {
+		$illu_email = $custom["illu_email"][0];
+		$illu_sites = $custom["illu_sites"][0];
+		$illu_sites_2 = $custom["illu_sites_2"][0];
+		$illu_phone = $custom["illu_phone"][0];
+		$illu_title = $custom["illu_title"][0];
+		?>
+			<p><label for="illu_title">Thesis Title:</label><br />
+			<textarea id="illu_title" name="illu_title"><?php echo $illu_title; ?></textarea></p>
+			<p><label for="illu_email">Email Address:</label><br />
+			<input type="email" id="illu_email" name="illu_email" value="<?php echo $illu_email; ?>"></p>
+			<p><label for="illu_sites">Website:</label><br />
+			<input type="url" id="illu_sites" name="illu_sites" value="<?php echo $illu_sites; ?>"><br />
+			<small>Include http://</small></p>
+			<p><label for="illu_sites_2">Website:</label><br />
+			<input type="url" id="illu_sites_2" name="illu_sites_2" value="<?php echo $illu_sites_2; ?>"><br />
+			<small>Include http://</small></p>
+			<p><label for="illu_phone">Telephone:</label><br />
+			<input type="tel" id="illu_phone" name="illu_phone" value="<?php echo $illu_phone; ?>"><br />
+			<small>Example: (416) 123-4567</p>
+		<?php
+	}
+}
+
+function save_details(){
+	global $post;
+	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+		return $post->ID;
+	}
+	if (isset( $_POST["illu_email"] ))
+		update_post_meta($post->ID, "illu_email", $_POST["illu_email"]);
+	if (isset( $_POST["illu_sites"] ))
+		update_post_meta($post->ID, "illu_sites", $_POST["illu_sites"]);
+	if (isset( $_POST["illu_sites_2"] ))
+		update_post_meta($post->ID, "illu_sites_2", $_POST["illu_sites_2"]);
+	if (isset( $_POST["illu_phone"] ))
+		update_post_meta($post->ID, "illu_phone", $_POST["illu_phone"]);
+	if (isset( $_POST["illu_title"] ))
+		update_post_meta($post->ID, "illu_title", $_POST["illu_title"]);
 }
 
 add_action('save_post', 'save_details');
 
-function save_details(){
-  global $post;
-	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-	    return $post->ID;
-	}
-  update_post_meta($post->ID, "illu_email", $_POST["illu_email"]);
-  update_post_meta($post->ID, "illu_sites", $_POST["illu_sites"]);
-  update_post_meta($post->ID, "illu_sites_2", $_POST["illu_sites_2"]);
-  update_post_meta($post->ID, "illu_phone", $_POST["illu_phone"]);
-  update_post_meta($post->ID, "illu_title", $_POST["illu_title"]);
-
-}
+?>

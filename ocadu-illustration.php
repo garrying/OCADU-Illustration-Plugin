@@ -39,31 +39,31 @@ function create_my_post_types() {
     )
   );
   
-  register_post_type( 'event',
-    array(
-      'labels' => array(
-        'name' => __( 'Events' ),
-        'singular_name' => __( 'Event' ),
-        'add_new' => __( 'Add New' ),
-        'add_new_item' => __( 'Add New Event' ),
-        'edit' => __( 'Edit' ),
-        'edit_item' => __( 'Edit Event' ),
-        'new_item' => __( 'New Event' ),
-        'view' => __( 'View Event' ),
-        'view_item' => __( 'View Event' ),
-        'search_items' => __( 'Search Events' ),
-        'not_found' => __( 'No Events Found' ),
-        'not_found_in_trash' => __( 'No Events found in Trash' ),
-        'parent' => __( 'Parent Event' ),
-      ),
-      'public' => true,
-      'has_archive' => true,
-      'menu_position' => 1,
-      'menu_icon' => 'dashicons-calendar-alt',
-      'supports' => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
-      'rewrite' => array( 'slug' => 'events', 'with_front' => false ),
-    )
-  );
+  // register_post_type( 'event',
+  //   array(
+  //     'labels' => array(
+  //       'name' => __( 'Events' ),
+  //       'singular_name' => __( 'Event' ),
+  //       'add_new' => __( 'Add New' ),
+  //       'add_new_item' => __( 'Add New Event' ),
+  //       'edit' => __( 'Edit' ),
+  //       'edit_item' => __( 'Edit Event' ),
+  //       'new_item' => __( 'New Event' ),
+  //       'view' => __( 'View Event' ),
+  //       'view_item' => __( 'View Event' ),
+  //       'search_items' => __( 'Search Events' ),
+  //       'not_found' => __( 'No Events Found' ),
+  //       'not_found_in_trash' => __( 'No Events found in Trash' ),
+  //       'parent' => __( 'Parent Event' ),
+  //     ),
+  //     'public' => true,
+  //     'has_archive' => true,
+  //     'menu_position' => 1,
+  //     'menu_icon' => 'dashicons-calendar-alt',
+  //     'supports' => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
+  //     'rewrite' => array( 'slug' => 'events', 'with_front' => false ),
+  //   )
+  // );
   
   $labels = array(
     'name' => _x( 'Graduating Years', 'taxonomy general name' ),

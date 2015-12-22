@@ -8,7 +8,7 @@ Version: 1.0
 Author URI: http://garrying.com
 */
 
-// Register Illustrator/Event post types
+// Register Illustrator/Event post types.
 
 add_action( 'init', 'create_my_post_types' );
 
@@ -34,37 +34,14 @@ function create_my_post_types() {
       'has_archive' => true,
       'menu_position' => 0,
       'menu_icon' => 'dashicons-id',
+      'show_in_rest' => true,
+      'rest_base' => 'illustrators-api',
+      'rest_controller_class' => 'WP_REST_Posts_Controller',
       'supports' => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
       'rewrite' => array( 'slug' => 'illustrators', 'with_front' => false ),
     )
   );
-  
-  // register_post_type( 'event',
-  //   array(
-  //     'labels' => array(
-  //       'name' => __( 'Events' ),
-  //       'singular_name' => __( 'Event' ),
-  //       'add_new' => __( 'Add New' ),
-  //       'add_new_item' => __( 'Add New Event' ),
-  //       'edit' => __( 'Edit' ),
-  //       'edit_item' => __( 'Edit Event' ),
-  //       'new_item' => __( 'New Event' ),
-  //       'view' => __( 'View Event' ),
-  //       'view_item' => __( 'View Event' ),
-  //       'search_items' => __( 'Search Events' ),
-  //       'not_found' => __( 'No Events Found' ),
-  //       'not_found_in_trash' => __( 'No Events found in Trash' ),
-  //       'parent' => __( 'Parent Event' ),
-  //     ),
-  //     'public' => true,
-  //     'has_archive' => true,
-  //     'menu_position' => 1,
-  //     'menu_icon' => 'dashicons-calendar-alt',
-  //     'supports' => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
-  //     'rewrite' => array( 'slug' => 'events', 'with_front' => false ),
-  //   )
-  // );
-  
+
   $labels = array(
     'name' => _x( 'Graduating Years', 'taxonomy general name' ),
     'singular_name' => _x( 'Grad Year', 'taxonomy singular name' ),
@@ -78,7 +55,7 @@ function create_my_post_types() {
     'new_item_name' => __( 'New Year Label' ),
     'menu_name' => __( 'Graduating Years' ),
   );
-  
+
   register_taxonomy( 'gradyear', 'illustrator', 
     array( 
       'hierarchical' => true, 
@@ -91,7 +68,7 @@ function create_my_post_types() {
   );
 }
 
-// Replace placeholder for title field
+// Replace placeholder for title field.
 
 add_filter('gettext','custom_enter_title');
 
@@ -104,10 +81,10 @@ function custom_enter_title( $input ) {
   return $input;
 }
 
-// Set custom meta fields
+// Set custom meta fields.
 
 add_action("admin_init", "admin_init");
- 
+
 function admin_init(){
   add_meta_box("credits_meta", "Illustrator Details", "illustrator_meta", "illustrator", "side", "high");
 }
@@ -155,7 +132,7 @@ function illustrator_meta() {
   }
 }
 
-// Save meta fields
+// Save meta fields.
 
 function save_details(){
   global $post;
@@ -176,11 +153,26 @@ function save_details(){
 
 add_action('save_post', 'save_details');
 
-// Extending WP-API with querying media based on post parent
+// Extending WP-API with querying media based on post parent.
 
 add_filter( 'query_vars', function( $vars ){
   $vars[] = 'post_parent';
   return $vars;
 });
+
+// Add REST API support to an already registered post type.
+
+function illustrator_rest_support() {
+  global $wp_post_types;
+  //be sure to set this to the name of your post type!
+  $post_type_name = 'illustrator';
+  if( isset( $wp_post_types[ $post_type_name ] ) ) {
+      $wp_post_types[$post_type_name]->show_in_rest = true;
+      $wp_post_types[$post_type_name]->rest_base = $post_type_name;
+      $wp_post_types[$post_type_name]->rest_controller_class = 'WP_REST_Posts_Controller';
+  }
+}
+
+add_action( 'init', 'illustrator_rest_support', 25 );
 
 ?>

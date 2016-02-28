@@ -140,6 +140,40 @@ function save_details( $post_id ){
 
 add_action( 'save_post', 'save_details' );
 
+// Add AMP support
+
+add_action( 'amp_init', 'illustrator_amp_add_review_cpt' );
+function illustrator_amp_add_review_cpt() {
+  add_post_type_support( 'illustrator', AMP_QUERY_VAR );
+}
+
+// Append gallery to AMP post content
+
+add_action( 'pre_amp_render_post', 'illustrator_amp_add_custom_actions' );
+
+function illustrator_amp_add_custom_actions() {
+  add_filter( 'the_content', 'illustrator_amp_add_featured_image' );
+}
+
+function illustrator_amp_add_featured_image( $content ) {
+  if ( has_post_thumbnail() ) {
+    $gallery_shortcode = '[gallery]';
+    $content = $gallery_shortcode . $content;
+  }
+  return $content;
+}
+
+// Modify AMP JSON
+
+add_filter( 'amp_post_template_metadata', 'illustrator_amp_modify_json_metadata', 10, 2 );
+
+function illustrator_amp_modify_json_metadata( $metadata, $post ) {
+  $metadata['@type'] = 'NewsArticle';
+  $metadata['headline'] = get_post_meta( $post->ID, 'illu_title', true );
+  $metadata['author']['name'] = $post->post_title;
+  return $metadata;
+}
+
 // Extending WP-API with querying media based on post parent.
 
 add_filter( 'query_vars', function( $vars ){

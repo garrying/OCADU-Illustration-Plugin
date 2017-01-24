@@ -227,7 +227,9 @@ function posts_columns( $defaults ){
 function posts_custom_columns( $column_name, $id ){
   switch ( $column_name ) {
     case 'post_thumbs' :
-      echo '<a href="'. get_edit_post_link( $id ) .'">' . the_post_thumbnail(array(100,100)) . '</a>';
+      echo '<a href="'. get_edit_post_link( $id ) .'">';
+      echo the_post_thumbnail(array(100,100), array( 'class' => 'align' ));
+      echo '</a>';
       break;
     case 'post_email' :
       echo get_post_meta($id, 'illu_email', true);

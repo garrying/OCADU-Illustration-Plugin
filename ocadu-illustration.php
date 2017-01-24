@@ -58,8 +58,9 @@ function create_my_post_types() {
 
   register_taxonomy( 'gradyear', 'illustrator', 
     array( 
-      'hierarchical' => true, 
+      'hierarchical' => true,
       'labels' => $labels,
+      'show_admin_column' => true,
       'public' => true,
       'show_ui' => true,
       'query_var' => true,
@@ -195,5 +196,44 @@ function illustrator_rest_support() {
 }
 
 add_action( 'init', 'illustrator_rest_support', 25 );
+
+// Custom columns for illustrator display
+
+add_filter('manage_illustrator_posts_columns', 'posts_columns', 5);
+add_action('manage_illustrator_posts_custom_column', 'posts_custom_columns', 5, 2);
+
+function posts_columns( $defaults ){
+  $defaults['post_thumbs'] = __('Featured Image');
+  $defaults['post_email'] = __('Email');
+  $defaults['post_site'] = __('Website');
+  $new = array();
+
+  foreach( $defaults as $key=>$value ) {
+    if( $key=='title' ) {
+      $new['post_thumbs'] = $tags;
+    if( $key=='date' ) {
+      $new['post_site'] = $tags;
+    if( $key=='date' ) {
+      $new['post_email'] = $tags;
+    $new[$key]=$value;
+  }
+
+  return $new;
+}
+
+function posts_custom_columns( $column_name, $id ){
+  switch ( $column_name ) {
+    case 'post_thumbs' :
+      echo '<a href="'. get_edit_post_link( $id ) .'">' . the_post_thumbnail(array(100,100)) . '</a>';
+      break;
+    case 'post_email' :
+      echo get_post_meta($id, 'illu_email', true);
+      break;
+    case 'post_site' :
+      $cf = esc_attr(get_post_meta( get_the_ID(), 'illu_sites', true ));
+      echo '<a href="' . $cf . '" target="_blank">' . $cf . '</a>';
+      break;
+  }
+}
 
 ?>

@@ -211,10 +211,13 @@ function posts_columns( $defaults ){
   foreach( $defaults as $key=>$value ) {
     if( $key=='title' ) {
       $new['post_thumbs'] = $tags;
+    }
     if( $key=='date' ) {
       $new['post_site'] = $tags;
+    }
     if( $key=='date' ) {
       $new['post_email'] = $tags;
+    }
     $new[$key]=$value;
   }
 

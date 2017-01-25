@@ -175,6 +175,35 @@ function illustrator_amp_modify_json_metadata( $metadata, $post ) {
   return $metadata;
 }
 
+// AMP Analytics
+
+add_filter( 'amp_post_template_analytics', 'illustrator_amp_add_custom_analytics' );
+
+function illustrator_amp_add_custom_analytics( $analytics ) {
+  if ( ! is_array( $analytics ) ) {
+    $analytics = array();
+  }
+  // https://developers.google.com/analytics/devguides/collection/amp-analytics/
+  $analytics['ocaduillustration-googleanalytics'] = array(
+    'type' => 'googleanalytics',
+    'attributes' => array(
+      // 'data-credentials' => 'include',
+    ),
+    'config_data' => array(
+      'vars' => array(
+        'account' => "UA-16173154-1"
+      ),
+      'triggers' => array(
+        'trackPageview' => array(
+          'on' => 'visible',
+          'request' => 'pageview',
+        ),
+      ),
+    ),
+  );
+  return $analytics;
+}
+
 // Extending WP-API with querying media based on post parent.
 
 add_filter( 'query_vars', function( $vars ){

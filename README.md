@@ -1,8 +1,8 @@
-# OCAD U Illustration Wordpress Plugin
+# OCAD U Illustration WordPress Plugin
 
-## A plugin for OCAD U's Illustration Department by [Garry Ing](http://garrying.com/ "Link to garrying.com")
+## A plugin for OCAD U's Illustration Department by [Garry Ing](https://garrying.com/ "Link to garrying.com")
 
-Currently working on *Wordpress 4.4.2*
+Currently working on *WordPress 5.4.1*
 
 ## Features
 
@@ -10,8 +10,9 @@ Currently working on *Wordpress 4.4.2*
 * Grad Year Taxonomies
 * Meta Fields for Illustrator Post Type
 * Illustator Post Type support for WP REST API
+* Maintenance mode by adding `.maintenance`
 
 ## Site URLs
 
-* [ocaduillustration.com](http://www.ocaduillustration.com)
-* [ocadillustration.com](http://www.ocadillustration.com)
+* [ocaduillustration.com](https://www.ocaduillustration.com)
+* [ocadillustration.com](https://www.ocadillustration.com)

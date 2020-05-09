@@ -270,4 +270,20 @@ function posts_custom_columns( $column_name, $id ){
   }
 }
 
+// Activate WordPress Maintenance Mode
+
+function wp_maintenance_mode(){
+  if ( file_exists( ABSPATH . '.maintenance' ) ) {
+    if(!current_user_can('edit_themes') || !is_user_logged_in()){
+      wp_die(
+        __( 'Briefly unavailable for scheduled maintenance. Check back in a minute.' ),
+        __( 'Maintenance' ),
+        503
+      );
+    }
+  }
+}
+
+add_action('get_header', 'wp_maintenance_mode');
+
 ?>

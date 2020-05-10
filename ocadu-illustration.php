@@ -110,11 +110,18 @@ function illustrator_meta( $post ) {
   </p>
   <p>
     <label for="illu_sites">Website</label><br />
-    <input type="url" id="illu_sites" name="illu_sites" placeholder="Include http://" value="<?php echo illustrator_get_custom_field( 'illu_sites' ); ?>" style="width:100%">
+    <input type="url" id="illu_sites" name="illu_sites" placeholder="Include https://" value="
+      <?php
+        if ( illustrator_get_custom_field( 'illu_sites' ) )
+          echo illustrator_get_custom_field( 'illu_sites' );
+        else
+          echo 'https://'
+      ?>
+      " style="width:100%">
   </p>
   <p>
     <label for="illu_sites_2">Website</label><br />
-    <input type="url" id="illu_sites_2" name="illu_sites_2" placeholder="Include http://" value="<?php echo illustrator_get_custom_field( 'illu_sites_2' ); ?>" style="width:100%">
+    <input type="url" id="illu_sites_2" name="illu_sites_2" placeholder="Include https://" value="<?php echo illustrator_get_custom_field( 'illu_sites_2' ); ?>" style="width:100%">
   </p>
   <p>
     <label for="illu_phone">Telephone</label><br />

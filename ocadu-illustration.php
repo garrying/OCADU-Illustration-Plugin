@@ -2,13 +2,13 @@
 /*
 Plugin Name: OCAD U Illustration
 Plugin URI: http://www.ocaduillustration.com
-Description: Brings support to WP4 for things like Event and Illustrator post types.
+Description: Brings support to WP5 for Illustrator post types.
 Author: Garry Ing
 Version: 1.0
-Author URI: http://garrying.com
+Author URI: https://garrying.com
 */
 
-// Register Illustrator/Event post types.
+// Register Illustrator post type.
 
 add_action( 'init', 'create_my_post_types' );
 
@@ -75,10 +75,8 @@ add_filter('gettext','custom_enter_title');
 
 function custom_enter_title( $input ) {
   global $post_type;
-  if( is_admin() && 'Enter title here' == $input && 'illustrator' == $post_type )
+  if( is_admin() && 'Add title' == $input && 'illustrator' == $post_type )
     return 'Enter First Name, Followed by Last Name';
-  if( is_admin() && 'Enter title here' == $input && 'event' == $post_type )
-    return 'Enter Event Title';
   return $input;
 }
 

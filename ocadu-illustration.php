@@ -279,8 +279,7 @@ function posts_custom_columns( $column_name, $id ) {
 			echo esc_html( get_post_meta( $id, 'illu_email', true ) );
 			break;
 		case 'post_site':
-			$cf = esc_attr( get_post_meta( get_the_ID(), 'illu_sites', true ) );
-			echo esc_html( '<a href="' . $cf . '" target="_blank">' . $cf . '</a>' );
+			echo esc_attr( get_post_meta( get_the_ID(), 'illu_sites', true ) );
 			break;
 	}
 }

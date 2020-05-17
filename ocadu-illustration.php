@@ -137,18 +137,18 @@ function illustrator_meta( $post ) {
 	?>
 	<p>
 	<label for="illu_title">Thesis Title</label><br />
-	<textarea id="illu_title" name="illu_title" style="width:100%"><?php echo illustrator_get_custom_field( 'illu_title' ); ?></textarea>
+	<textarea id="illu_title" name="illu_title" style="width:100%"><?php echo esc_html( illustrator_get_custom_field( 'illu_title' ) ); ?></textarea>
 	</p>
 	<p>
 	<label for="illu_email">Email Address</label><br />
-	<input type="email" id="illu_email" name="illu_email" value="<?php echo illustrator_get_custom_field( 'illu_email' ); ?>" style="width:100%">
+	<input type="email" id="illu_email" name="illu_email" value="<?php echo esc_html( illustrator_get_custom_field( 'illu_email' ) ); ?>" style="width:100%">
 	</p>
 	<p>
 	<label for="illu_sites">Website</label><br />
 	<input type="url" id="illu_sites" name="illu_sites" placeholder="Include https://" value="
 		<?php
 		if ( illustrator_get_custom_field( 'illu_sites' ) ) {
-			echo illustrator_get_custom_field( 'illu_sites' );
+			echo esc_html( illustrator_get_custom_field( 'illu_sites' ) );
 		} else {
 			echo 'https://';
 		}
@@ -157,11 +157,11 @@ function illustrator_meta( $post ) {
 	</p>
 	<p>
 	<label for="illu_sites_2">Website</label><br />
-	<input type="url" id="illu_sites_2" name="illu_sites_2" placeholder="Include https://" value="<?php echo illustrator_get_custom_field( 'illu_sites_2' ); ?>" style="width:100%">
+	<input type="url" id="illu_sites_2" name="illu_sites_2" placeholder="Include https://" value="<?php echo esc_html( illustrator_get_custom_field( 'illu_sites_2' ) ); ?>" style="width:100%">
 	</p>
 	<p>
 	<label for="illu_phone">Telephone</label><br />
-	<input type="tel" id="illu_phone" name="illu_phone" placeholder="Example: (416) 123-4567" value="<?php echo illustrator_get_custom_field( 'illu_phone' ); ?>" style="width:100%">
+	<input type="tel" id="illu_phone" name="illu_phone" placeholder="Example: (416) 123-4567" value="<?php echo esc_html( illustrator_get_custom_field( 'illu_phone' ) ); ?>" style="width:100%">
 	</p>
 	<?php wp_nonce_field( '_ocaduillustration_nonce', '_ocaduillustration_process' ); ?>
 	<?php
@@ -244,13 +244,13 @@ function posts_columns( $defaults ) {
 	$new                     = array();
 
 	foreach ( $defaults as $key => $value ) {
-		if ( $key === 'title' ) {
+		if ( 'title' === $key ) {
 			$new['post_thumbs'] = $tags;
 		}
-		if ( $key === 'date' ) {
+		if ( 'date' === $key ) {
 			$new['post_site'] = $tags;
 		}
-		if ( $key === 'date' ) {
+		if ( 'date' === $key ) {
 			$new['post_email'] = $tags;
 		}
 		$new[ $key ] = $value;
@@ -271,16 +271,16 @@ function posts_custom_columns( $column_name, $id ) {
 			$thumb_id        = get_post_thumbnail_id();
 			$thumb_url_array = wp_get_attachment_image_src( $thumb_id, 'thumbnail', true );
 			$thumb_url       = $thumb_url_array[0];
-			echo '<a href="' . get_edit_post_link( $id ) . '">';
-			echo "<img width='100' height='100' src='" . $thumb_url . "' />";
+			echo '<a href="' . esc_html( get_edit_post_link( $id ) ) . '">';
+			echo "<img width='100' height='100' src='" . esc_html( $thumb_url ) . "' />";
 			echo '</a>';
 			break;
 		case 'post_email':
-			echo get_post_meta( $id, 'illu_email', true );
+			echo esc_html( get_post_meta( $id, 'illu_email', true ) );
 			break;
 		case 'post_site':
 			$cf = esc_attr( get_post_meta( get_the_ID(), 'illu_sites', true ) );
-			echo '<a href="' . $cf . '" target="_blank">' . $cf . '</a>';
+			echo esc_html( '<a href="' . $cf . '" target="_blank">' . $cf . '</a>' );
 			break;
 	}
 }
@@ -292,8 +292,8 @@ function wp_maintenance_mode() {
 	if ( file_exists( ABSPATH . '.maintenance' ) ) {
 		if ( ! current_user_can( 'edit_themes' ) || ! is_user_logged_in() ) {
 			wp_die(
-				__( 'Briefly unavailable for scheduled maintenance. Check back in a minute.' ),
-				__( 'Maintenance' ),
+				esc_html( __( 'Briefly unavailable for scheduled maintenance. Check back in a minute.' ) ),
+				esc_html( __( 'Maintenance' ) ),
 				503
 			);
 		}

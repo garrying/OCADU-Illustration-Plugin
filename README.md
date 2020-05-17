@@ -1,6 +1,6 @@
 # OCAD U Illustration WordPress Plugin
 
-## A plugin for OCAD U's Illustration Department by [Garry Ing](https://garrying.com/ "Link to garrying.com")
+## A plugin for OCAD U's Illustration Program by [Garry Ing](https://garrying.com/ "Link to garrying.com")
 
 Currently working on *WordPress 5.4.1*
 

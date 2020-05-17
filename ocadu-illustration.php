@@ -261,8 +261,11 @@ function posts_columns( $defaults ){
 function posts_custom_columns( $column_name, $id ){
   switch ( $column_name ) {
     case 'post_thumbs' :
+      $thumb_id = get_post_thumbnail_id();
+      $thumb_url_array = wp_get_attachment_image_src($thumb_id, 'thumbnail', true);
+      $thumb_url = $thumb_url_array[0];
       echo '<a href="'. get_edit_post_link( $id ) .'">';
-      echo the_post_thumbnail(array(100,100), array( 'class' => 'alignleft' ));
+      echo "<img width='100' height='100' src='".$thumb_url."' />";
       echo '</a>';
       break;
     case 'post_email' :

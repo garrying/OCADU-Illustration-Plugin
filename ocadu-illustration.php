@@ -50,6 +50,9 @@ function create_my_post_types() {
 				'slug'       => 'illustrators',
 				'with_front' => false,
 			),
+			'show_in_graphql'       => true,
+			'graphql_single_name'   => 'illustrator',
+			'graphql_plural_name'   => 'illustrators',
 		)
 	);
 

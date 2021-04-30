@@ -186,13 +186,13 @@ function illustrator_meta( $post ) {
 					while ( $ocaduillustration_home_index->have_posts() ) :
 							$ocaduillustration_home_index->the_post();
 						?>
-						<?php if ( get_the_id() != $post->ID ) : ?>
+						<?php if ( trim( get_the_id() ) !== $post->ID ) : ?>
 							<option value="<?php the_ID(); ?>"
-								<?php 
-								if ( get_the_id() == get_post_meta( $post->ID, 'illu_related', true ) ) {
+								<?php
+								if ( trim( get_the_id() ) === get_post_meta( $post->ID, 'illu_related', true ) ) {
 									echo 'selected';
 								}
-									?>
+								?>
 								><?php the_title(); ?> ● <?php echo esc_html( get_post_meta( get_the_id(), 'illu_title', true ) ); ?></option>
 						<?php endif; ?>
 					<?php endwhile; ?>

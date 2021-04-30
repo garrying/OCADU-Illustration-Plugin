@@ -52,7 +52,7 @@ function create_my_post_types() {
 			),
 			'show_in_graphql'       => true,
 			'graphql_single_name'   => 'illustrator',
-      'hierarchical'          => true,
+			'hierarchical'          => true,
 			'graphql_plural_name'   => 'illustrators',
 		)
 	);
@@ -167,39 +167,39 @@ function illustrator_meta( $post ) {
 	<label for="illu_phone">Telephone</label><br />
 	<input type="tel" id="illu_phone" name="illu_phone" placeholder="Example: (416) 123-4567" value="<?php echo esc_html( illustrator_get_custom_field( 'illu_phone' ) ); ?>" style="width:100%">
 	</p>
-  <?php if ( get_the_terms( $post->ID, 'gradyear' ) ) : ?>
-    <p>
-      <label for="illu_related">Related Work</label><br />
-        <?php
-          $class_year                   = get_the_terms( $post->ID, 'gradyear' )[0]->slug;
-          $ocaduillustration_args       = array(
-            'taxonomy'  => 'gradyear',
-            'post_type' => 'illustrator',
-            'term'      => $class_year,
-          );
-          $ocaduillustration_home_index = new WP_Query( $ocaduillustration_args );
-        ?>
-        <select name="illu_related" id="illu_related">
-          <option value="">--Select a related post--</option>
-      	<?php if ( $ocaduillustration_home_index->have_posts() ) : ?>
-          <?php
-            while ( $ocaduillustration_home_index->have_posts() ) :
-              $ocaduillustration_home_index->the_post();
-          ?>
-            <?php if ( get_the_id() != $post->ID ) : ?>
-              <option value="<?php the_ID() ?>"
-                <?php if ( get_the_id() == get_post_meta( $post->ID, 'illu_related', true ) ) {
-                  echo 'selected';
-                } ?>
-                ><?php the_title() ?> ● <?php echo get_post_meta( get_the_id(), 'illu_title', true ) ?></option>
-            <?php endif; ?>
-          <?php endwhile; ?>
-        <?php endif; ?>
-        </select>
-    </p>
-  <?php endif; ?>
-  <?php wp_nonce_field( '_ocaduillustration_nonce', '_ocaduillustration_process' ); ?>
-  <?php
+	<?php if ( get_the_terms( $post->ID, 'gradyear' ) ) : ?>
+		<p>
+			<label for="illu_related">Related Work</label><br />
+				<?php
+					$class_year                   = get_the_terms( $post->ID, 'gradyear' )[0]->slug;
+					$ocaduillustration_args       = array(
+						'taxonomy'  => 'gradyear',
+						'post_type' => 'illustrator',
+						'term'      => $class_year,
+					);
+					$ocaduillustration_home_index = new WP_Query( $ocaduillustration_args );
+				?>
+				<select name="illu_related" id="illu_related">
+					<option value="">--Select a related post--</option>
+				<?php if ( $ocaduillustration_home_index->have_posts() ) : ?>
+					<?php
+						while ( $ocaduillustration_home_index->have_posts() ) :
+							$ocaduillustration_home_index->the_post();
+					?>
+						<?php if ( get_the_id() != $post->ID ) : ?>
+							<option value="<?php the_ID() ?>"
+								<?php if ( get_the_id() == get_post_meta( $post->ID, 'illu_related', true ) ) {
+									echo 'selected';
+								} ?>
+								><?php the_title() ?> ● <?php echo esc_html( get_post_meta( get_the_id(), 'illu_title', true ) ) ?></option>
+						<?php endif; ?>
+					<?php endwhile; ?>
+				<?php endif; ?>
+				</select>
+		</p>
+	<?php endif; ?>
+	<?php wp_nonce_field( '_ocaduillustration_nonce', '_ocaduillustration_process' ); ?>
+	<?php
 }
 
 /**
@@ -232,9 +232,9 @@ function save_details( $post_id ) {
 	if ( isset( $_POST['illu_title'] ) ) {
 		update_post_meta( $post_id, 'illu_title', sanitize_text_field( wp_unslash( $_POST['illu_title'] ) ) );
 	}
-  if ( isset( $_POST['illu_related'] ) ) {
-    update_post_meta( $post_id, 'illu_related', sanitize_text_field( wp_unslash( $_POST['illu_related'] ) ) );
-  }
+	if ( isset( $_POST['illu_related'] ) ) {
+		update_post_meta( $post_id, 'illu_related', sanitize_text_field( wp_unslash( $_POST['illu_related'] ) ) );
+	}
 }
 
 add_action( 'save_post', 'save_details' );

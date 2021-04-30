@@ -171,8 +171,8 @@ function illustrator_meta( $post ) {
 		<p>
 			<label for="illu_related">Related Work</label><br />
 				<?php
-					$class_year                   = get_the_terms( $post->ID, 'gradyear' )[0]->slug;
-					$ocaduillustration_args       = array(
+					$class_year                     = get_the_terms( $post->ID, 'gradyear' )[0]->slug;
+					$ocaduillustration_args         = array(
 						'taxonomy'  => 'gradyear',
 						'post_type' => 'illustrator',
 						'term'      => $class_year,

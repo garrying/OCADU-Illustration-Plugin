@@ -177,14 +177,14 @@ function illustrator_meta( $post ) {
 						'post_type' => 'illustrator',
 						'term'      => $class_year,
 					);
-					$ocaduillustration_home_index = new WP_Query( $ocaduillustration_args );
+					$ocaduillustration_illustrators = new WP_Query( $ocaduillustration_args );
 					?>
 				<select name="illu_related" id="illu_related">
 					<option value="">--Select a related post--</option>
-				<?php if ( $ocaduillustration_home_index->have_posts() ) : ?>
+				<?php if ( $ocaduillustration_illustrators->have_posts() ) : ?>
 					<?php
-					while ( $ocaduillustration_home_index->have_posts() ) :
-							$ocaduillustration_home_index->the_post();
+					while ( $ocaduillustration_illustrators->have_posts() ) :
+							$ocaduillustration_illustrators->the_post();
 						?>
 						<?php if ( trim( get_the_id() ) !== $post->ID ) : ?>
 							<option value="<?php the_ID(); ?>"

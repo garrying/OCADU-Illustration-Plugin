@@ -90,23 +90,6 @@ function create_my_post_types() {
 	);
 }
 
-// Replace placeholder for title field.
-
-add_filter( 'gettext', 'custom_enter_title' );
-
-/**
- * Override the title field.
- *
- * @param  Number $input The title input field.
- */
-function custom_enter_title( $input ) {
-	global $post_type;
-	if ( is_admin() && 'Add title' === $input && 'illustrator' === $post_type ) {
-		return 'Enter First Name, Followed by Last Name';
-	}
-	return $input;
-}
-
 // Set custom meta fields.
 
 add_action( 'admin_init', 'admin_init' );
@@ -173,30 +156,37 @@ function illustrator_meta( $post ) {
 				<?php
 					$class_year                     = get_the_terms( $post->ID, 'gradyear' )[0]->slug;
 					$ocaduillustration_args         = array(
-						'taxonomy'  => 'gradyear',
-						'post_type' => 'illustrator',
-						'term'      => $class_year,
+						'post_type'      => 'illustrator',
+						'posts_per_page' => -1,
+						'tax_query'      => array( // phpcs:ignore
+							array(
+								'taxonomy' => 'gradyear',
+								'field'    => 'slug',
+								'terms'    => $class_year,
+							),
+						),
 					);
-					$ocaduillustration_illustrators = new WP_Query( $ocaduillustration_args );
+					$ocaduillustration_illustrators = get_posts( $ocaduillustration_args );
 					?>
 				<select name="illu_related" id="illu_related">
 					<option value="">--Select a related post--</option>
-				<?php if ( $ocaduillustration_illustrators->have_posts() ) : ?>
 					<?php
-					while ( $ocaduillustration_illustrators->have_posts() ) :
-							$ocaduillustration_illustrators->the_post();
-						?>
-						<?php if ( trim( get_the_id() ) !== $post->ID ) : ?>
-							<option value="<?php the_ID(); ?>"
-								<?php
-								if ( trim( get_the_id() ) === get_post_meta( $post->ID, 'illu_related', true ) ) {
-									echo 'selected';
-								}
-								?>
-								><?php the_title(); ?> ● <?php echo esc_html( get_post_meta( get_the_id(), 'illu_title', true ) ); ?></option>
-						<?php endif; ?>
-					<?php endwhile; ?>
-				<?php endif; ?>
+					if ( $ocaduillustration_illustrators ) :
+						foreach ( $ocaduillustration_illustrators as $illustrator ) :
+							setup_postdata( $illustrator );
+							$selected = '';
+							if ( get_post_meta( $post->ID, 'illu_related', true ) === trim( $illustrator->ID ) ) {
+								$selected = 'selected';
+							}
+							?>
+							<?php if ( trim( $illustrator->ID ) !== $post->ID ) : ?>
+								<option value="<?php echo esc_attr( $illustrator->ID ); ?>" <?php echo esc_attr( $selected ); ?>><?php echo esc_html( $illustrator->post_title ); ?> ● <?php echo esc_html( get_post_meta( $illustrator->ID, 'illu_title', true ) ); ?></option>
+							<?php endif; ?>
+							<?php
+					endforeach;
+							wp_reset_postdata();
+					endif;
+					?>
 				</select>
 		</p>
 	<?php endif; ?>
@@ -281,6 +271,7 @@ function posts_columns( $defaults ) {
 	$defaults['post_thumbs'] = __( 'Featured Image' );
 	$defaults['post_email']  = __( 'Email' );
 	$defaults['post_site']   = __( 'Website' );
+	$defaults['post_name']   = __( 'Permalink' );
 	$new                     = array();
 
 	foreach ( $defaults as $key => $value ) {
@@ -292,6 +283,9 @@ function posts_columns( $defaults ) {
 		}
 		if ( 'date' === $key ) {
 			$new['post_email'] = $value;
+		}
+		if ( 'date' === $key ) {
+			$new['post_name'] = $value;
 		}
 		$new[ $key ] = $value;
 	}
@@ -320,6 +314,9 @@ function posts_custom_columns( $column_name, $id ) {
 			break;
 		case 'post_site':
 			echo esc_url( get_post_meta( get_the_ID(), 'illu_sites', true ) );
+			break;
+		case 'post_name':
+			echo esc_attr( get_post_field( 'post_name', get_post() ) );
 			break;
 	}
 }

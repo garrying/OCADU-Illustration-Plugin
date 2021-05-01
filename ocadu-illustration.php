@@ -90,23 +90,6 @@ function create_my_post_types() {
 	);
 }
 
-// Replace placeholder for title field.
-
-add_filter( 'gettext', 'custom_enter_title' );
-
-/**
- * Override the title field.
- *
- * @param  Number $input The title input field.
- */
-function custom_enter_title( $input ) {
-	global $post_type;
-	if ( is_admin() && 'Add title' === $input && 'illustrator' === $post_type ) {
-		return 'Enter First Name, Followed by Last Name';
-	}
-	return $input;
-}
-
 // Set custom meta fields.
 
 add_action( 'admin_init', 'admin_init' );
@@ -281,6 +264,7 @@ function posts_columns( $defaults ) {
 	$defaults['post_thumbs'] = __( 'Featured Image' );
 	$defaults['post_email']  = __( 'Email' );
 	$defaults['post_site']   = __( 'Website' );
+	$defaults['post_name']   = __( 'Permalink' );
 	$new                     = array();
 
 	foreach ( $defaults as $key => $value ) {
@@ -292,6 +276,9 @@ function posts_columns( $defaults ) {
 		}
 		if ( 'date' === $key ) {
 			$new['post_email'] = $value;
+		}
+		if ( 'date' === $key ) {
+			$new['post_name'] = $value;
 		}
 		$new[ $key ] = $value;
 	}
@@ -320,6 +307,9 @@ function posts_custom_columns( $column_name, $id ) {
 			break;
 		case 'post_site':
 			echo esc_url( get_post_meta( get_the_ID(), 'illu_sites', true ) );
+			break;
+		case 'post_name':
+			echo esc_attr( get_post_field( 'post_name', get_post() ) );
 			break;
 	}
 }

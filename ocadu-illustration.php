@@ -158,31 +158,32 @@ function illustrator_meta( $post ) {
 					$ocaduillustration_args         = array(
 						'post_type'      => 'illustrator',
 						'posts_per_page' => -1,
-						'tax_query' => array(
+						'tax_query'      => array(
 							array(
-									'taxonomy' => 'gradyear',
-									'field'    => 'slug',
-									'terms'    => $class_year
-								)
-						)
+								'taxonomy' => 'gradyear',
+								'field'    => 'slug',
+								'terms'    => $class_year,
+							),
+						),
 					);
 					$ocaduillustration_illustrators = get_posts( $ocaduillustration_args );
 					?>
 				<select name="illu_related" id="illu_related">
 					<option value="">--Select a related post--</option>
-					<?php 
-					if ( $ocaduillustration_illustrators ):
-							foreach  ( $ocaduillustration_illustrators as $illustrator ) :  setup_postdata($illustrator);
+					<?php
+					if ( $ocaduillustration_illustrators ) :
+						foreach ( $ocaduillustration_illustrators as $illustrator ) :
+							setup_postdata( $illustrator );
 							$selected = '';
-							if ( get_post_meta( $post->ID, 'illu_related', true ) == $illustrator->ID )
-							{
+							if ( get_post_meta( $post->ID, 'illu_related', true ) == $illustrator->ID ) {
 								$selected = 'selected';
 							}
-					?>
+							?>
 							<?php if ( trim( $illustrator->ID ) !== $post->ID ) : ?>
-								<option value="<?php echo esc_attr($illustrator->ID); ?>" <?=$selected?>><?php echo esc_html($illustrator->post_title); ?> ● <?php echo esc_html( get_post_meta( $illustrator->ID, 'illu_title', true ) ); ?></option>
+								<option value="<?php echo esc_attr( $illustrator->ID ); ?>" <?php echo $selected; ?>><?php echo esc_html( $illustrator->post_title ); ?> ● <?php echo esc_html( get_post_meta( $illustrator->ID, 'illu_title', true ) ); ?></option>
 							<?php endif; ?>
-					<?php endforeach;
+							<?php
+					endforeach;
 							wp_reset_postdata();
 					endif;
 					?>

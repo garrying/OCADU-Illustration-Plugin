@@ -158,7 +158,7 @@ function illustrator_meta( $post ) {
 					$ocaduillustration_args         = array(
 						'post_type'      => 'illustrator',
 						'posts_per_page' => -1,
-						'tax_query'      => array(
+						'tax_query'      => array( // phpcs:ignore
 							array(
 								'taxonomy' => 'gradyear',
 								'field'    => 'slug',
@@ -175,12 +175,12 @@ function illustrator_meta( $post ) {
 						foreach ( $ocaduillustration_illustrators as $illustrator ) :
 							setup_postdata( $illustrator );
 							$selected = '';
-							if ( get_post_meta( $post->ID, 'illu_related', true ) == $illustrator->ID ) {
+							if ( get_post_meta( $post->ID, 'illu_related', true ) === trim( $illustrator->ID ) ) {
 								$selected = 'selected';
 							}
 							?>
 							<?php if ( trim( $illustrator->ID ) !== $post->ID ) : ?>
-								<option value="<?php echo esc_attr( $illustrator->ID ); ?>" <?php echo $selected; ?>><?php echo esc_html( $illustrator->post_title ); ?> ● <?php echo esc_html( get_post_meta( $illustrator->ID, 'illu_title', true ) ); ?></option>
+								<option value="<?php echo esc_attr( $illustrator->ID ); ?>" <?php echo esc_attr( $selected ); ?>><?php echo esc_html( $illustrator->post_title ); ?> ● <?php echo esc_html( get_post_meta( $illustrator->ID, 'illu_title', true ) ); ?></option>
 							<?php endif; ?>
 							<?php
 					endforeach;

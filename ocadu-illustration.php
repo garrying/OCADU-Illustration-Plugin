@@ -156,30 +156,36 @@ function illustrator_meta( $post ) {
 				<?php
 					$class_year                     = get_the_terms( $post->ID, 'gradyear' )[0]->slug;
 					$ocaduillustration_args         = array(
-						'taxonomy'  => 'gradyear',
-						'post_type' => 'illustrator',
-						'term'      => $class_year,
+						'post_type'      => 'illustrator',
+						'posts_per_page' => -1,
+						'tax_query' => array(
+							array(
+									'taxonomy' => 'gradyear',
+									'field'    => 'slug',
+									'terms'    => $class_year
+								)
+						)
 					);
-					$ocaduillustration_illustrators = new WP_Query( $ocaduillustration_args );
+					$ocaduillustration_illustrators = get_posts( $ocaduillustration_args );
 					?>
 				<select name="illu_related" id="illu_related">
 					<option value="">--Select a related post--</option>
-				<?php if ( $ocaduillustration_illustrators->have_posts() ) : ?>
-					<?php
-					while ( $ocaduillustration_illustrators->have_posts() ) :
-							$ocaduillustration_illustrators->the_post();
-						?>
-						<?php if ( trim( get_the_id() ) !== $post->ID ) : ?>
-							<option value="<?php the_ID(); ?>"
-								<?php
-								if ( trim( get_the_id() ) === get_post_meta( $post->ID, 'illu_related', true ) ) {
-									echo 'selected';
-								}
-								?>
-								><?php the_title(); ?> ● <?php echo esc_html( get_post_meta( get_the_id(), 'illu_title', true ) ); ?></option>
-						<?php endif; ?>
-					<?php endwhile; ?>
-				<?php endif; ?>
+					<?php 
+					if ( $ocaduillustration_illustrators ):
+							foreach  ( $ocaduillustration_illustrators as $illustrator ) :  setup_postdata($illustrator);
+							$selected = '';
+							if ( get_post_meta( $post->ID, 'illu_related', true ) == $illustrator->ID )
+							{
+								$selected = 'selected';
+							}
+					?>
+							<?php if ( trim( $illustrator->ID ) !== $post->ID ) : ?>
+								<option value="<?php echo esc_attr($illustrator->ID); ?>" <?=$selected?>><?php echo esc_html($illustrator->post_title); ?> ● <?php echo esc_html( get_post_meta( $illustrator->ID, 'illu_title', true ) ); ?></option>
+							<?php endif; ?>
+					<?php endforeach;
+							wp_reset_postdata();
+					endif;
+					?>
 				</select>
 		</p>
 	<?php endif; ?>

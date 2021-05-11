@@ -11,9 +11,7 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1"
   },
   "scripts": {
-    "checkcs": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 7.4-",
-    "fixcs": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 7.4-",
-    "lint": "@php ./vendor/bin/parallel-lint --exclude .git --exclude vendor ."
+    "lint": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs -p ocadu-illustration.php --standard=WordPress,WordPress-Extra,WordPress-Docs,WordPress-Core"
   },
   "license": "MIT"
 }

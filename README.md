@@ -1,5 +1,5 @@
 # OCAD U Illustration WordPress Plugin 
-[![Build Status](https://travis-ci.com/garrying/OCADU-Illustration-Plugin.svg?branch=main)](https://travis-ci.com/garrying/OCADU-Illustration-Plugin)
+[![PHP/Assets Lint](https://github.com/garrying/OCADU-Illustration-Plugin/actions/workflows/lint.yml/badge.svg)](https://github.com/garrying/OCADU-Illustration-Plugin/actions/workflows/lint.yml)
 
 ## A plugin for OCAD U's Illustration Program by [Garry Ing](https://garrying.com/ "Link to garrying.com")
 

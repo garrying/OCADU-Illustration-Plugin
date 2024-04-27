@@ -235,7 +235,7 @@ add_action( 'save_post', 'save_details' );
 
 add_filter(
 	'query_vars',
-	function( $vars ) {
+	function ( $vars ) {
 		$vars[] = 'post_parent';
 		return $vars;
 	}
@@ -337,5 +337,29 @@ function wp_maintenance_mode() {
 }
 
 add_action( 'get_header', 'wp_maintenance_mode' );
+
+/**
+ * Set the default term for a new post.
+ *
+ * @param  String  $post_id The post ID.
+ * @param  Integer $post    The post.
+ */
+function set_default_term_for_new_post( $post_id, $post ) {
+	if ( 'illustrator' === $post->post_type ) {
+			$taxonomy    = 'gradyear';
+			$term_args   = array(
+				'order'      => 'DESC',
+				'parent'     => 0,
+				'number'     => 1,
+				'hide_empty' => false,
+			);
+			$recent_term = get_terms( $taxonomy, $term_args );
+			if ( ! empty( $recent_term ) && ! is_wp_error( $recent_term ) ) {
+					wp_set_object_terms( $post_id, $recent_term[0]->term_id, $taxonomy, true );
+			}
+	}
+}
+
+add_action( 'save_post', 'set_default_term_for_new_post', 10, 2 );
 
 ?>

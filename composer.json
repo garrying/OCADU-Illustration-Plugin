@@ -8,7 +8,7 @@
   "require-dev": {
     "wp-coding-standards/wpcs": "^2.3",
     "php-parallel-lint/php-parallel-lint": "^1.3",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1"
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0"
   },
   "scripts": {
     "lint": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs -p ocadu-illustration.php --standard=WordPress,WordPress-Extra,WordPress-Docs,WordPress-Core"

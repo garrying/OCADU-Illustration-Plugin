@@ -346,14 +346,14 @@ add_action( 'get_header', 'wp_maintenance_mode' );
  */
 function set_default_term_for_new_post( $post_id, $post ) {
 	if ( 'illustrator' === $post->post_type ) {
-			$taxonomy    = 'gradyear';
 			$term_args   = array(
+				'taxonomy'   => 'gradyear',
 				'order'      => 'DESC',
 				'parent'     => 0,
 				'number'     => 1,
 				'hide_empty' => false,
 			);
-			$recent_term = get_terms( $taxonomy, $term_args );
+			$recent_term = get_terms( $term_args );
 			if ( ! empty( $recent_term ) && ! is_wp_error( $recent_term ) ) {
 					wp_set_object_terms( $post_id, $recent_term[0]->term_id, $taxonomy, true );
 			}

@@ -13,5 +13,10 @@
   "scripts": {
     "lint": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs -p ocadu-illustration.php --standard=WordPress,WordPress-Extra,WordPress-Docs,WordPress-Core"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
 }

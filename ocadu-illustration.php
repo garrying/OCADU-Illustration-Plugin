@@ -346,7 +346,7 @@ add_action( 'get_header', 'wp_maintenance_mode' );
  */
 function set_default_term_for_new_post( $post_id, $post ) {
 	if ( 'illustrator' === $post->post_type ) {
-		$taxonomy    = 'gradyear';
+		$taxonomy       = 'gradyear';
 		$existing_terms = wp_get_object_terms( $post_id, $taxonomy );
 		if ( empty( $existing_terms ) ) {
 			$term_args   = array(

@@ -354,6 +354,7 @@ function posts_columns($defaults)
       $new["post_email"] = __("Email");
       $new["post_site"] = __("Website");
       $new["post_name"] = __("Permalink");
+      $new["post_images"] = __("Images");
     }
   }
   return $new;
@@ -388,6 +389,10 @@ function posts_custom_columns($column_name, $id)
       break;
     case "post_name":
       echo esc_attr(get_post_field("post_name", get_post()));
+      break;
+    case "post_images":
+      $count = count(get_attached_media("image", $id));
+      echo esc_html($count);
       break;
   }
 }

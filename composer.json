@@ -3,7 +3,7 @@
   "type": "package",
   "description": "A Wordpress thing for OCAD U Illustration Program.",
   "require": {
-    "php": ">=7.4"
+    "php": ">=8.3"
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "^3.1",
@@ -11,7 +11,7 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0"
   },
   "scripts": {
-    "lint": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs -p ocadu-illustration.php --standard=WordPress,WordPress-Extra,WordPress-Docs,WordPress-Core"
+    "lint": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs -p ocadu-illustration.php --standard=.phpcs.xml"
   },
   "license": "MIT",
   "config": {

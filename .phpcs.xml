@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<ruleset name="OCADU Illustration">
+  <description>PHPCS rules aligned with Prettier PHP formatting.</description>
+
+  <file>ocadu-illustration.php</file>
+  <exclude-pattern>vendor/*</exclude-pattern>
+  <exclude-pattern>node_modules/*</exclude-pattern>
+
+  <rule ref="WordPress-Core">
+    <!-- Indentation: Prettier uses 2 spaces -->
+    <exclude name="Generic.WhiteSpace.DisallowSpaceIndent" />
+    <exclude name="Generic.WhiteSpace.ScopeIndent" />
+    <exclude name="WordPress.Arrays.ArrayIndentation" />
+
+    <!-- Alignment: Prettier doesn't align => or = -->
+    <exclude name="WordPress.Arrays.ArrayKeySpacingRestrictions" />
+    <exclude name="Generic.Formatting.MultipleStatementAlignment" />
+    <exclude name="WordPress.Arrays.MultipleStatementAlignment" />
+
+    <!-- Single line arrays: Prettier omits spaces inside -->
+    <exclude name="WordPress.Arrays.ArrayDeclarationSpacing" />
+    <exclude name="NormalizedArrays.Arrays.ArrayBraceSpacing" />
+
+    <!-- Function calls: Prettier formats differently -->
+    <exclude name="PEAR.Functions.FunctionCallSignature" />
+    <exclude name="Generic.Functions.FunctionCallArgumentSpacing" />
+    <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing" />
+
+    <!-- Arrays: Prettier uses [] -->
+    <exclude name="Universal.Arrays.DisallowShortArraySyntax" />
+    <exclude name="Generic.Arrays.DisallowShortArraySyntax" />
+
+    <!-- Strings: Prettier uses double quotes -->
+    <exclude name="Squiz.Strings.DoubleQuoteUsage" />
+
+    <!-- Spacing: Prettier omits spaces inside parens -->
+    <exclude name="WordPress.WhiteSpace.ControlStructureSpacing" />
+    <exclude name="Squiz.ControlStructures.ControlSignature" />
+
+    <!-- Embedded PHP: Prettier formats inline PHP differently -->
+    <exclude name="Squiz.PHP.EmbeddedPhp" />
+
+    <!-- Opening brace: Prettier puts it on a new line -->
+    <exclude name="Generic.Functions.OpeningFunctionBraceKernighanRitchie" />
+    <exclude name="PEAR.Functions.FunctionDeclaration" />
+
+    <!-- Spacing around !: Prettier omits these spaces -->
+    <exclude name="WordPress.WhiteSpace.OperatorSpacing" />
+
+    <!-- switch/case: Prettier indents break differently -->
+    <exclude name="PSR2.ControlStructures.SwitchDeclaration" />
+
+    <!-- Precision alignment: 2-space indent warnings -->
+    <exclude name="Universal.WhiteSpace.PrecisionAlignment" />
+
+    <!-- Short ternary: Prettier allows ?? style -->
+    <exclude name="Universal.Operators.DisallowShortTernary" />
+  </rule>
+
+</ruleset>

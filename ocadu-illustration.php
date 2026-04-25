@@ -12,6 +12,10 @@
  * @since 1.0.0
  **/
 
+if ( ! defined( 'ABSPATH' ) ) {
+		exit;
+}
+
 // Register Illustrator post type.
 
 add_action( 'init', 'create_my_post_types' );
@@ -43,7 +47,7 @@ function create_my_post_types() {
 			'menu_position'         => 0,
 			'menu_icon'             => 'dashicons-id',
 			'show_in_rest'          => true,
-			'rest_base'             => 'illustrators-api',
+			'rest_base'             => 'illustrator',
 			'rest_controller_class' => 'WP_REST_Posts_Controller',
 			'supports'              => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
 			'rewrite'               => array(
@@ -80,6 +84,7 @@ function create_my_post_types() {
 			'show_admin_column' => true,
 			'public'            => true,
 			'show_ui'           => true,
+			'show_in_rest'      => true,
 			'query_var'         => true,
 			'rewrite'           => array(
 				'slug'         => 'year',
@@ -132,18 +137,10 @@ function illustrator_meta( $post ) {
 	</p>
 	<p>
 	<label for="illu_sites">Website</label><br />
-	<input type="url" id="illu_sites" name="illu_sites" placeholder="Include https://" value="
-		<?php
-		if ( illustrator_get_custom_field( 'illu_sites' ) ) {
-			echo esc_url( illustrator_get_custom_field( 'illu_sites' ) );
-		} else {
-			echo 'https://';
-		}
-		?>
-		" style="width:100%">
+	<input type="url" id="illu_sites" name="illu_sites" placeholder="Include https://""<?php echo esc_url( illustrator_get_custom_field( 'illu_sites' ) ?: '' ); ?>" style="width:100%">
 	</p>
 	<p>
-	<label for="illu_sites_2">Website</label><br />
+	<label for="illu_sites_2">Website Secondary</label><br />
 	<input type="url" id="illu_sites_2" name="illu_sites_2" placeholder="Include https://" value="<?php echo esc_url( illustrator_get_custom_field( 'illu_sites_2' ) ); ?>" style="width:100%">
 	</p>
 	<p>
@@ -204,9 +201,12 @@ function save_details( $post_id ) {
 		return;
 	}
 	if ( ! wp_verify_nonce( sanitize_key( $_POST['_ocaduillustration_process'] ), '_ocaduillustration_nonce' ) ) {
-		return $post->ID;
+		return;
 	}
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
 		return;
 	}
 	if ( isset( $_POST['illu_email'] ) ) {
@@ -241,21 +241,6 @@ add_filter(
 	}
 );
 
-/**
- * Add REST API support to an already registered post type.
- */
-function illustrator_rest_support() {
-	global $wp_post_types;
-	// be sure to set this to the name of your post type!
-	$post_type_name = 'illustrator';
-	if ( isset( $wp_post_types[ $post_type_name ] ) ) {
-		$wp_post_types[ $post_type_name ]->show_in_rest          = true;
-		$wp_post_types[ $post_type_name ]->rest_base             = $post_type_name;
-		$wp_post_types[ $post_type_name ]->rest_controller_class = 'WP_REST_Posts_Controller';
-	}
-}
-
-add_action( 'init', 'illustrator_rest_support', 25 );
 
 // Custom columns for illustrator display.
 
@@ -268,29 +253,19 @@ add_action( 'manage_illustrator_posts_custom_column', 'posts_custom_columns', 5,
  * @param  Array $defaults The column array.
  */
 function posts_columns( $defaults ) {
-	$defaults['post_thumbs'] = __( 'Featured Image' );
-	$defaults['post_email']  = __( 'Email' );
-	$defaults['post_site']   = __( 'Website' );
-	$defaults['post_name']   = __( 'Permalink' );
-	$new                     = array();
-
-	foreach ( $defaults as $key => $value ) {
-		if ( 'title' === $key ) {
-			$new['post_thumbs'] = $value;
-		}
-		if ( 'date' === $key ) {
-			$new['post_site'] = $value;
-		}
-		if ( 'date' === $key ) {
-			$new['post_email'] = $value;
-		}
-		if ( 'date' === $key ) {
-			$new['post_name'] = $value;
-		}
-		$new[ $key ] = $value;
-	}
-
-	return $new;
+    $new = array();
+    foreach ( $defaults as $key => $value ) {
+        if ( 'title' === $key ) {
+            $new['post_thumbs'] = __( 'Featured Image' );
+        }
+        $new[ $key ] = $value;
+        if ( 'title' === $key ) {
+            $new['post_email'] = __( 'Email' );
+            $new['post_site']  = __( 'Website' );
+            $new['post_name']  = __( 'Permalink' );
+        }
+    }
+    return $new;
 }
 
 /**
@@ -302,7 +277,7 @@ function posts_columns( $defaults ) {
 function posts_custom_columns( $column_name, $id ) {
 	switch ( $column_name ) {
 		case 'post_thumbs':
-			$thumb_id        = get_post_thumbnail_id();
+			$thumb_id        = get_post_thumbnail_id( $id );
 			$thumb_url_array = wp_get_attachment_image_src( $thumb_id, 'thumbnail', true );
 			$thumb_url       = $thumb_url_array[0];
 			echo '<a href="' . esc_url( get_edit_post_link( $id ) ) . '">';
@@ -313,7 +288,7 @@ function posts_custom_columns( $column_name, $id ) {
 			echo esc_attr( get_post_meta( $id, 'illu_email', true ) );
 			break;
 		case 'post_site':
-			echo esc_url( get_post_meta( get_the_ID(), 'illu_sites', true ) );
+			echo esc_url( get_post_meta( $id, 'illu_sites', true ) );
 			break;
 		case 'post_name':
 			echo esc_attr( get_post_field( 'post_name', get_post() ) );

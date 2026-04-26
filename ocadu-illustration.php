@@ -490,8 +490,9 @@ function ocaduillustration_admin_styles($hook)
   }
   wp_add_inline_style(
     "wp-admin",
-    "#the-list td, #the-list th { padding: 4px 8px; }
-     #the-list td.post_thumbs img { width: 40px; height: 40px; }",
+    "#the-list td, #the-list th { padding: 4px 4px; }
+     #the-list td.post_thumbs img { width: 40px; height: 40px; }
+     .column-post_thumbs { width: 60px; }",
   );
 }
 

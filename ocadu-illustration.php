@@ -453,4 +453,48 @@ function set_default_term_for_new_post($post_id, $post)
 
 add_action("save_post", "set_default_term_for_new_post", 10, 2);
 
+/**
+ * Set default sort order for illustrator post type to publish date descending.
+ *
+ * @param WP_Query $query The query object.
+ */
+function ocaduillustration_default_sort($query)
+{
+  if (
+    !is_admin() ||
+    !$query->is_main_query() ||
+    "illustrator" !== $query->get("post_type")
+  ) {
+    return;
+  }
+  if (!isset($_GET["orderby"])) {
+    $query->set("orderby", "date");
+    $query->set("order", "DESC");
+  }
+}
+
+add_action("pre_get_posts", "ocaduillustration_default_sort");
+
+/**
+ * Enqueue admin styles for illustrator post type.
+ *
+ * @param string $hook The current admin page hook.
+ */
+function ocaduillustration_admin_styles($hook)
+{
+  if ("edit.php" !== $hook) {
+    return;
+  }
+  if (!isset($_GET["post_type"]) || "illustrator" !== $_GET["post_type"]) {
+    return;
+  }
+  wp_add_inline_style(
+    "wp-admin",
+    "#the-list td, #the-list th { padding: 4px 8px; }
+     #the-list td.post_thumbs img { width: 40px; height: 40px; }",
+  );
+}
+
+add_action("admin_enqueue_scripts", "ocaduillustration_admin_styles");
+
 ?>

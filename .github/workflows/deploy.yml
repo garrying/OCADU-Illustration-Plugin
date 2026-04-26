@@ -2,14 +2,14 @@ name: Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Deploy theme
+      - name: Deploy plugin
         uses: Burnett01/rsync-deployments@8.0.5
         with:
           switches: -avzr --delete

@@ -48,7 +48,7 @@ function create_my_post_types()
     "show_in_rest" => true,
     "rest_base" => "illustrator",
     "rest_controller_class" => "WP_REST_Posts_Controller",
-    "supports" => ["title", "editor", "excerpt", "thumbnail"],
+    "supports" => ["title", "editor", "excerpt", "thumbnail", "custom-fields"],
     "rewrite" => [
       "slug" => "illustrators",
       "with_front" => false,
@@ -346,8 +346,6 @@ add_action("rest_api_init", function () {
     "illu_email" => "string",
     "illu_sites" => "string",
     "illu_sites_2" => "string",
-    "illu_phone" => "string",
-    "illu_related" => "string",
   ];
 
   foreach ($meta_fields as $key => $type) {

@@ -178,8 +178,8 @@ function illustrator_meta($post)
   </p>
   <p>
   <label for="illu_sites">Website</label><br />
-  <input type="url" id="illu_sites" name="illu_sites" placeholder="Include https://""<?php echo esc_url(
-    illustrator_get_custom_field("illu_sites") ?: "",
+  <input type="url" id="illu_sites" name="illu_sites" placeholder="Include https://" value="<?php echo esc_url(
+    illustrator_get_custom_field("illu_sites"),
   ); ?>" style="width:100%">
   </p>
   <p>

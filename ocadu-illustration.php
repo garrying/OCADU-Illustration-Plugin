@@ -338,6 +338,29 @@ add_action(
 );
 
 /**
+ * Expose illustrator meta fields in the REST API.
+ */
+add_action("rest_api_init", function () {
+  $meta_fields = [
+    "illu_title" => "string",
+    "illu_email" => "string",
+    "illu_sites" => "string",
+    "illu_sites_2" => "string",
+    "illu_phone" => "string",
+    "illu_related" => "string",
+  ];
+
+  foreach ($meta_fields as $key => $type) {
+    register_post_meta("illustrator", $key, [
+      "show_in_rest" => true,
+      "single" => true,
+      "type" => $type,
+      "auth_callback" => fn() => current_user_can("edit_posts"),
+    ]);
+  }
+});
+
+/**
  * Change default columns for illustrator post type.
  *
  * @param  Array $defaults The column array.

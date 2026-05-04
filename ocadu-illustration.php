@@ -2,14 +2,21 @@
 /**
  * Plugin Name: OCAD U Illustration
  * Plugin URI: https://www.ocaduillustration.com
- * Description: Brings support to WP5 for Illustrator post types.
+ * Description: Custom Illustrator post type, taxonomy, and admin UI for OCAD U's Illustration Program.
+ * Version: 1.1.0
  * Author: Garry Ing
- * Version: 1.0.0
  * Author URI: https://garrying.com
+ * Requires at least: 6.5
+ * Requires PHP: 8.3
+ * Tested up to: 6.8
+ * License: MIT
+ * License URI: https://opensource.org/licenses/MIT
+ * Text Domain: ocadu-illustration
+ * Update URI: false
  *
  * @package OCADUIllustration
- * @author Garry Ing
- * @since 1.0.0
+ * @author  Garry Ing
+ * @since   1.0.0
  **/
 
 if (!defined("ABSPATH")) {
@@ -18,28 +25,31 @@ if (!defined("ABSPATH")) {
 
 // Register Illustrator post type.
 
-add_action("init", "create_my_post_types");
+add_action("init", "ocaduillustration_register_post_types");
 
 /**
  * Register a custom post type called "illustrator".
  */
-function create_my_post_types()
+function ocaduillustration_register_post_types()
 {
   register_post_type("illustrator", [
     "labels" => [
-      "name" => __("Illustrators"),
-      "singular_name" => __("Illustrator"),
-      "add_new" => __("Add New"),
-      "add_new_item" => __("Add New Illustrator"),
-      "edit" => __("Edit"),
-      "edit_item" => __("Edit Illustrator"),
-      "new_item" => __("New Illustrator"),
-      "view" => __("View Illustrator"),
-      "view_item" => __("View Illustrator"),
-      "search_items" => __("Search Illustrators"),
-      "not_found" => __("No Illustrators Found"),
-      "not_found_in_trash" => __("No Illustrators found in Trash"),
-      "parent" => __("Parent Illustrator"),
+      "name" => __("Illustrators", "ocadu-illustration"),
+      "singular_name" => __("Illustrator", "ocadu-illustration"),
+      "add_new" => __("Add New", "ocadu-illustration"),
+      "add_new_item" => __("Add New Illustrator", "ocadu-illustration"),
+      "edit" => __("Edit", "ocadu-illustration"),
+      "edit_item" => __("Edit Illustrator", "ocadu-illustration"),
+      "new_item" => __("New Illustrator", "ocadu-illustration"),
+      "view" => __("View Illustrator", "ocadu-illustration"),
+      "view_item" => __("View Illustrator", "ocadu-illustration"),
+      "search_items" => __("Search Illustrators", "ocadu-illustration"),
+      "not_found" => __("No Illustrators Found", "ocadu-illustration"),
+      "not_found_in_trash" => __(
+        "No Illustrators found in Trash",
+        "ocadu-illustration",
+      ),
+      "parent" => __("Parent Illustrator", "ocadu-illustration"),
     ],
     "public" => true,
     "has_archive" => true,
@@ -60,17 +70,25 @@ function create_my_post_types()
   ]);
 
   $labels = [
-    "name" => _x("Graduating Years", "taxonomy general name"),
-    "singular_name" => _x("Grad Year", "taxonomy singular name"),
-    "search_items" => __("Search Years"),
-    "all_items" => __("All Years"),
-    "parent_item" => __("Parent Year"),
-    "parent_item_colon" => __("Parent Year:"),
-    "edit_item" => __("Edit Year"),
-    "update_item" => __("Update Year"),
-    "add_new_item" => __("Add New Graduating Year"),
-    "new_item_name" => __("New Year Label"),
-    "menu_name" => __("Graduating Years"),
+    "name" => _x(
+      "Graduating Years",
+      "taxonomy general name",
+      "ocadu-illustration",
+    ),
+    "singular_name" => _x(
+      "Grad Year",
+      "taxonomy singular name",
+      "ocadu-illustration",
+    ),
+    "search_items" => __("Search Years", "ocadu-illustration"),
+    "all_items" => __("All Years", "ocadu-illustration"),
+    "parent_item" => __("Parent Year", "ocadu-illustration"),
+    "parent_item_colon" => __("Parent Year:", "ocadu-illustration"),
+    "edit_item" => __("Edit Year", "ocadu-illustration"),
+    "update_item" => __("Update Year", "ocadu-illustration"),
+    "add_new_item" => __("Add New Graduating Year", "ocadu-illustration"),
+    "new_item_name" => __("New Year Label", "ocadu-illustration"),
+    "menu_name" => __("Graduating Years", "ocadu-illustration"),
   ];
 
   register_taxonomy("gradyear", "illustrator", [
@@ -86,22 +104,25 @@ function create_my_post_types()
       "with_front" => true,
       "hierarchical" => true,
     ],
+    "show_in_graphql" => true,
+    "graphql_single_name" => "gradyear",
+    "graphql_plural_name" => "gradyears",
   ]);
 }
 
 // Set custom meta fields.
 
-add_action("admin_init", "admin_init");
+add_action("admin_init", "ocaduillustration_register_meta_box");
 
 /**
  * Init a space for custom fields.
  */
-function admin_init()
+function ocaduillustration_register_meta_box()
 {
   add_meta_box(
     "credits_meta",
     "Illustrator Details",
-    "illustrator_meta",
+    "ocaduillustration_render_meta_box",
     "illustrator",
     "side",
     "high",
@@ -111,12 +132,12 @@ function admin_init()
 /**
  * Helper function for getting custom field values.
  *
- * @param  Number $value The custom field getter.
+ * @param  int    $post_id The post ID.
+ * @param  string $value   The custom field key.
  */
-function illustrator_get_custom_field($value)
+function ocaduillustration_get_custom_field($post_id, $value)
 {
-  global $post;
-  $custom_field = get_post_meta($post->ID, $value, true);
+  $custom_field = get_post_meta($post_id, $value, true);
   if (!empty($custom_field)) {
     return is_array($custom_field)
       ? stripslashes_deep($custom_field)
@@ -128,9 +149,9 @@ function illustrator_get_custom_field($value)
 /**
  * Custom meta fields.
  *
- * @param  Number $post The post ID.
+ * @param  WP_Post $post The post object.
  */
-function illustrator_meta($post)
+function ocaduillustration_render_meta_box($post)
 {
   ?>
   <p>
@@ -139,7 +160,10 @@ function illustrator_meta($post)
     <?php
     $image_count = count(get_attached_media("image", $post->ID));
     echo esc_html(
-      $image_count . " " . _n("image", "images", $image_count) . " uploaded",
+      $image_count .
+        " " .
+        _n("image", "images", $image_count, "ocadu-illustration") .
+        " uploaded",
     );
     ?>
   </span>
@@ -167,31 +191,31 @@ function illustrator_meta($post)
   <p>
   <label for="illu_title">Thesis Title</label><br />
   <textarea id="illu_title" name="illu_title" style="width:100%"><?php echo esc_textarea(
-    illustrator_get_custom_field("illu_title"),
+    ocaduillustration_get_custom_field($post->ID, "illu_title"),
   ); ?></textarea>
   </p>
   <p>
   <label for="illu_email">Email Address</label><br />
   <input type="email" id="illu_email" name="illu_email" value="<?php echo esc_html(
-    illustrator_get_custom_field("illu_email"),
+    ocaduillustration_get_custom_field($post->ID, "illu_email"),
   ); ?>" style="width:100%">
   </p>
   <p>
   <label for="illu_sites">Website</label><br />
   <input type="url" id="illu_sites" name="illu_sites" placeholder="Include https://" value="<?php echo esc_url(
-    illustrator_get_custom_field("illu_sites"),
+    ocaduillustration_get_custom_field($post->ID, "illu_sites"),
   ); ?>" style="width:100%">
   </p>
   <p>
   <label for="illu_sites_2">Website Secondary</label><br />
   <input type="url" id="illu_sites_2" name="illu_sites_2" placeholder="Include https://" value="<?php echo esc_url(
-    illustrator_get_custom_field("illu_sites_2"),
+    ocaduillustration_get_custom_field($post->ID, "illu_sites_2"),
   ); ?>" style="width:100%">
   </p>
   <p>
   <label for="illu_phone">Telephone</label><br />
   <input type="tel" id="illu_phone" name="illu_phone" placeholder="Example: (416) 123-4567" value="<?php echo esc_html(
-    illustrator_get_custom_field("illu_phone"),
+    ocaduillustration_get_custom_field($post->ID, "illu_phone"),
   ); ?>" style="width:100%">
   </p>
   <?php if (get_the_terms($post->ID, "gradyear")): ?>
@@ -253,9 +277,9 @@ function illustrator_meta($post)
 /**
  * Save meta fields.
  *
- * @param  Number $post_id The post ID.
+ * @param  int $post_id The post ID.
  */
-function save_details($post_id)
+function ocaduillustration_save_details($post_id)
 {
   if (!isset($_POST["_ocaduillustration_process"])) {
     return;
@@ -318,7 +342,7 @@ function save_details($post_id)
   }
 }
 
-add_action("save_post", "save_details");
+add_action("save_post", "ocaduillustration_save_details");
 
 // Extending WP-API with querying media based on post parent.
 
@@ -329,10 +353,14 @@ add_filter("query_vars", function ($vars) {
 
 // Custom columns for illustrator display.
 
-add_filter("manage_illustrator_posts_columns", "posts_columns", 5);
+add_filter(
+  "manage_illustrator_posts_columns",
+  "ocaduillustration_posts_columns",
+  5,
+);
 add_action(
   "manage_illustrator_posts_custom_column",
-  "posts_custom_columns",
+  "ocaduillustration_posts_custom_columns",
   5,
   2,
 );
@@ -361,21 +389,21 @@ add_action("rest_api_init", function () {
 /**
  * Change default columns for illustrator post type.
  *
- * @param  Array $defaults The column array.
+ * @param  array $defaults The column array.
  */
-function posts_columns($defaults)
+function ocaduillustration_posts_columns($defaults)
 {
   $new = [];
   foreach ($defaults as $key => $value) {
     if ("title" === $key) {
-      $new["post_thumbs"] = __("Featured Image");
+      $new["post_thumbs"] = __("Featured Image", "ocadu-illustration");
     }
     $new[$key] = $value;
     if ("title" === $key) {
-      $new["post_email"] = __("Email");
-      $new["post_site"] = __("Website");
-      $new["post_name"] = __("Permalink");
-      $new["post_images"] = __("Images");
+      $new["post_email"] = __("Email", "ocadu-illustration");
+      $new["post_site"] = __("Website", "ocadu-illustration");
+      $new["post_name"] = __("Permalink", "ocadu-illustration");
+      $new["post_images"] = __("Images", "ocadu-illustration");
     }
   }
   return $new;
@@ -384,10 +412,10 @@ function posts_columns($defaults)
 /**
  * Add feature image to admin view.
  *
- * @param  String  $column_name The column ID.
- * @param  Integer $id          The post ID.
+ * @param  string $column_name The column ID.
+ * @param  int    $id          The post ID.
  */
-function posts_custom_columns($column_name, $id)
+function ocaduillustration_posts_custom_columns($column_name, $id)
 {
   switch ($column_name) {
     case "post_thumbs":
@@ -421,32 +449,33 @@ function posts_custom_columns($column_name, $id)
 /**
  * Activate WordPress Maintenance Mode.
  */
-function wp_maintenance_mode()
+function ocaduillustration_maintenance_mode()
 {
   if (file_exists(ABSPATH . ".maintenance")) {
-    if (!current_user_can("edit_themes") || !is_user_logged_in()) {
+    if (!current_user_can("manage_options") || !is_user_logged_in()) {
       wp_die(
         esc_html(
           __(
             "Briefly unavailable for scheduled maintenance. Check back in a minute.",
+            "ocadu-illustration",
           ),
         ),
-        esc_html(__("Maintenance")),
+        esc_html(__("Maintenance", "ocadu-illustration")),
         503,
       );
     }
   }
 }
 
-add_action("get_header", "wp_maintenance_mode");
+add_action("get_header", "ocaduillustration_maintenance_mode");
 
 /**
  * Set the default term for a new post.
  *
- * @param  String  $post_id The post ID.
- * @param  Integer $post    The post.
+ * @param  int     $post_id The post ID.
+ * @param  WP_Post $post    The post.
  */
-function set_default_term_for_new_post($post_id, $post)
+function ocaduillustration_set_default_term($post_id, $post)
 {
   if ("illustrator" === $post->post_type) {
     $taxonomy = "gradyear";
@@ -472,7 +501,7 @@ function set_default_term_for_new_post($post_id, $post)
   }
 }
 
-add_action("save_post", "set_default_term_for_new_post", 10, 2);
+add_action("save_post", "ocaduillustration_set_default_term", 10, 2);
 
 /**
  * Set default sort order for illustrator post type to publish date descending.
@@ -518,5 +547,3 @@ function ocaduillustration_admin_styles($hook)
 }
 
 add_action("admin_enqueue_scripts", "ocaduillustration_admin_styles");
-
-?>

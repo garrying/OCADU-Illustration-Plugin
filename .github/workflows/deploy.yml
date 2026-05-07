@@ -4,6 +4,13 @@ on:
   push:
     branches: [ main ]
 
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -15,7 +22,7 @@ jobs:
       - name: Deploy plugin
         uses: Burnett01/rsync-deployments@8.0.5
         with:
-          switches: -avzr --delete
+          switches: -avzr --delete --exclude='.git' --exclude='.github' --exclude='node_modules' --exclude='vendor' --exclude='.gitignore' --exclude='.prettierrc' --exclude='package.json' --exclude='package-lock.json' --exclude='composer.json' --exclude='composer.lock' --exclude='.phpcs.xml'
           remote_path: /var/www/html/wp-content/plugins/ocaduillustration/
           remote_host: ocaduillustration.com
           remote_user: ${{ secrets.DEPLOY_USER }}

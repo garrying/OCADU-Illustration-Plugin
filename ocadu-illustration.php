@@ -110,9 +110,23 @@ function ocaduillustration_register_post_types()
   ]);
 }
 
+// Flush rewrite rules on activation/deactivation so custom permalinks work.
+
+register_activation_hook(__FILE__, "ocaduillustration_activate");
+register_deactivation_hook(__FILE__, "flush_rewrite_rules");
+
+/**
+ * Register post types then flush rewrite rules on plugin activation.
+ */
+function ocaduillustration_activate()
+{
+  ocaduillustration_register_post_types();
+  flush_rewrite_rules();
+}
+
 // Set custom meta fields.
 
-add_action("admin_init", "ocaduillustration_register_meta_box");
+add_action("add_meta_boxes", "ocaduillustration_register_meta_box");
 
 /**
  * Init a space for custom fields.
@@ -240,18 +254,15 @@ function ocaduillustration_render_meta_box($post)
         <select name="illu_related" id="illu_related">
           <option value="">--Select a related post--</option>
           <?php if ($ocaduillustration_illustrators):
+            $current_id = (int) $post->ID;
             foreach ($ocaduillustration_illustrators as $illustrator):
 
               setup_postdata($illustrator);
-              $selected = "";
-              if (
-                get_post_meta($post->ID, "illu_related", true) ===
-                trim($illustrator->ID)
-              ) {
-                $selected = "selected";
-              }
+              $illustrator_id = (int) $illustrator->ID;
+              $related_id = (int) get_post_meta($post->ID, "illu_related", true);
+              $selected = $related_id === $illustrator_id ? "selected" : "";
               ?>
-              <?php if (trim($illustrator->ID) !== $post->ID): ?>
+              <?php if ($illustrator_id !== $current_id): ?>
                 <option value="<?php echo esc_attr(
                   $illustrator->ID,
                 ); ?>" <?php echo esc_attr($selected); ?>><?php echo esc_html(
@@ -330,7 +341,7 @@ function ocaduillustration_save_details($post_id)
     update_post_meta(
       $post_id,
       "illu_title",
-      sanitize_text_field(wp_unslash($_POST["illu_title"])),
+      sanitize_textarea_field(wp_unslash($_POST["illu_title"])),
     );
   }
   if (isset($_POST["illu_related"])) {
@@ -366,21 +377,22 @@ add_action(
 );
 
 /**
- * Expose illustrator meta fields in the REST API.
+ * Register illustrator meta fields and expose them in the REST API.
  */
-add_action("rest_api_init", function () {
+add_action("init", function () {
   $meta_fields = [
-    "illu_title" => "string",
-    "illu_email" => "string",
-    "illu_sites" => "string",
-    "illu_sites_2" => "string",
+    "illu_title" => "sanitize_textarea_field",
+    "illu_email" => "sanitize_email",
+    "illu_sites" => "esc_url_raw",
+    "illu_sites_2" => "esc_url_raw",
   ];
 
-  foreach ($meta_fields as $key => $type) {
+  foreach ($meta_fields as $key => $sanitize_callback) {
     register_post_meta("illustrator", $key, [
       "show_in_rest" => true,
       "single" => true,
-      "type" => $type,
+      "type" => "string",
+      "sanitize_callback" => $sanitize_callback,
       "auth_callback" => fn() => current_user_can("edit_posts"),
     ]);
   }
@@ -425,19 +437,19 @@ function ocaduillustration_posts_custom_columns($column_name, $id)
         "thumbnail",
         true,
       );
-      $thumb_url = $thumb_url_array[0];
+      $thumb_url = $thumb_url_array ? $thumb_url_array[0] : "";
       echo '<a href="' . esc_url(get_edit_post_link($id)) . '">';
       echo "<img width='100' height='100' src='" . esc_url($thumb_url) . "' />";
       echo "</a>";
       break;
     case "post_email":
-      echo esc_attr(get_post_meta($id, "illu_email", true));
+      echo esc_html(get_post_meta($id, "illu_email", true));
       break;
     case "post_site":
       echo esc_url(get_post_meta($id, "illu_sites", true));
       break;
     case "post_name":
-      echo esc_attr(get_post_field("post_name", get_post()));
+      echo esc_attr(get_post_field("post_name", $id));
       break;
     case "post_images":
       $count = count(get_attached_media("image", $id));
